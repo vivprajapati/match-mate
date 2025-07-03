@@ -61,6 +61,16 @@ class UserRepository {
         }
     }
 
+    suspend fun getUsersPaginated(page: Int, pageSize: Int): ApiResult<List<User>> {
+        return try {
+            val offset = (page - 1) * pageSize
+            val users = userDao.getUsersPaginated(pageSize, offset)
+            ApiResult.Success(users)
+        } catch (e: Exception) {
+            ApiResult.Error(e.hashCode(), "Failed to fetch paginated users: ${e.message}")
+        }
+    }
+
     suspend fun fetchUsers(): ApiResult<List<User>> {
         return withContext(Dispatchers.IO) {
             try {

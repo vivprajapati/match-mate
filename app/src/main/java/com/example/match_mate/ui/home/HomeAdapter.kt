@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.match_mate.R
 import com.example.match_mate.data.model.User
 import com.example.match_mate.utils.MatchScoreUtil
+import kotlin.collections.addAll
 
 
 class HomeAdapter(
@@ -48,8 +49,9 @@ class HomeAdapter(
     }
 
     fun addUsers(newUsers: List<User>) {
+        val startPosition = users.size
         users.addAll(newUsers)
-        notifyItemInserted(users.size - 1)
+        notifyItemRangeInserted(startPosition, newUsers.size)
     }
 
     fun getUsers(): List<User> {

@@ -1,6 +1,7 @@
 package com.example.match_mate.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.example.match_mate.databinding.FragmentHomeBinding
 import com.example.match_mate.data.model.User
 import com.example.match_mate.utils.AppSession
 import com.google.android.material.snackbar.Snackbar
+import kotlin.math.log
 
 class HomeFragment : Fragment() {
 
@@ -37,7 +39,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        homeViewModel.allUsersState.observe(viewLifecycleOwner, Observer { result ->
+
+        homeViewModel.users.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ApiResult.Success -> {
                     isLoading = false
@@ -46,7 +49,7 @@ class HomeFragment : Fragment() {
                         binding.errorLayout.visibility = View.GONE
                         binding.matchRecyclerView.visibility = View.VISIBLE
                         userAdapter.updateData(result.data)
-                        if (userAdapter.getUsers().isEmpty()){
+                        if (userAdapter.getUsers().isEmpty()) {
                             binding.emptyLayout.visibility = View.VISIBLE
                             binding.matchRecyclerView.visibility = View.GONE
                         } else {
@@ -69,7 +72,7 @@ class HomeFragment : Fragment() {
                     } else {
                         Snackbar.make(binding.root, errorMessage.toString(), Snackbar.LENGTH_SHORT)
                             .setAction("Retry") {
-                                homeViewModel.loadUsers()
+                                homeViewModel.loadNextPage()
                             }
                             .show()
                     }
@@ -84,7 +87,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
 
         homeViewModel.acceptedUsersState.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
@@ -121,12 +124,12 @@ class HomeFragment : Fragment() {
         })
 
         binding.retryButton.setOnClickListener {
-            homeViewModel.loadUsers()
+            homeViewModel.loadNextPage()
         }
         setupRecyclerView()
 
 
-        homeViewModel.loadUsers()
+        homeViewModel.loadNextPage()
     }
 
     fun removeUser(user: User) {
@@ -136,7 +139,7 @@ class HomeFragment : Fragment() {
 
     fun loadIfListEmpty() {
         if (userAdapter.getUsers().isEmpty()) {
-            homeViewModel.loadUsers()
+            homeViewModel.loadNextPage()
         }
     }
 
@@ -161,10 +164,9 @@ class HomeFragment : Fragment() {
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val visibleThreshold = 2
-
                 if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                     isLoading = true
-                    homeViewModel.loadUsers()
+                    homeViewModel.loadNextPage()
                 }
             }
         })

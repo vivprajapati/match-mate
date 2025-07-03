@@ -21,6 +21,8 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE status = 'self'")
     suspend fun getLoggedInUser(): User?
 
+    @Query("SELECT * FROM users WHERE status NOT IN ('self', 'accepted', 'declined') LIMIT :limit OFFSET :offset")
+    suspend fun getUsersPaginated(limit: Int, offset: Int): List<User>
     @Update
     suspend fun updateUser(user: User)
 
