@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
+    app:strokeColor="@android:color/transparent"
     android:orientation="vertical">
 
 
@@ -14,7 +15,6 @@
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:cardUseCompatPadding="false"
-        app:strokeColor="@android:color/transparent"
         app:strokeWidth="0dp">
 
         <ImageView

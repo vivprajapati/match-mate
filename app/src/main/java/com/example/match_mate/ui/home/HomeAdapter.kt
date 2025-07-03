@@ -46,6 +46,7 @@ class HomeAdapter(
             notifyItemRemoved(position)
         }
     }
+
     fun addUsers(newUsers: List<User>) {
         users.addAll(newUsers)
         notifyItemInserted(users.size - 1)
@@ -72,6 +73,13 @@ class HomeAdapter(
             locationMatchText.text = locationMatch
             professionText.text = user.education
 
+            if (user.status == "declined" || user.status == "accepted") {
+                buttonAccept.visibility = View.GONE
+                buttonDecline.visibility = View.GONE
+            } else {
+                buttonAccept.visibility = View.VISIBLE
+                buttonDecline.visibility = View.VISIBLE
+            }
             Glide.with(context)
                 .load(user.pictureLarge)
                 .into(profileImage)

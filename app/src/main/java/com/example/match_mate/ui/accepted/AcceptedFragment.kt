@@ -39,6 +39,7 @@ class AcceptedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.title.text = "Accepted"
         viewModel = ViewModelProvider(this)[AcceptedViewModel::class.java]
         observeAcceptedUsers()
         setUpRecyclerView()
@@ -62,9 +63,16 @@ class AcceptedFragment : Fragment() {
             when (apiResult) {
                 is ApiResult.Success -> {
                     if (apiResult.data.isEmpty()) {
-                        Toast.makeText(requireContext(), "No accepted users found", Toast.LENGTH_SHORT).show()
+                        binding.loadingProgressBar.visibility = View.GONE
+                        binding.errorLayout.visibility = View.GONE
+                        binding.matchRecyclerView.visibility = View.GONE
+                        binding.emptyLayout.visibility = View.VISIBLE
                     } else {
                         adapter.updateData(apiResult.data)
+                        binding.matchRecyclerView.visibility = View.VISIBLE
+                        binding.loadingProgressBar.visibility = View.GONE
+                        binding.errorLayout.visibility = View.GONE
+                        binding.emptyLayout.visibility = View.GONE
                     }
 
                 }

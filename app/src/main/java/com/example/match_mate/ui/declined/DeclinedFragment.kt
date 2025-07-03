@@ -42,6 +42,7 @@ class DeclinedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.title.text = "Declined"
         viewModel = ViewModelProvider(this)[DeclinedViewModel::class.java]
         observeAcceptedUsers()
         setUpRecyclerView()
@@ -65,9 +66,16 @@ class DeclinedFragment : Fragment() {
             when (apiResult) {
                 is ApiResult.Success -> {
                     if (apiResult.data.isEmpty()) {
-                        Toast.makeText(requireContext(), "No declined users found", Toast.LENGTH_SHORT).show()
+                        binding.loadingProgressBar.visibility = View.GONE
+                        binding.errorLayout.visibility = View.GONE
+                        binding.matchRecyclerView.visibility = View.GONE
+                        binding.emptyLayout.visibility = View.VISIBLE
                     } else {
                         adapter.updateData(apiResult.data)
+                        binding.matchRecyclerView.visibility = View.VISIBLE
+                        binding.loadingProgressBar.visibility = View.GONE
+                        binding.errorLayout.visibility = View.GONE
+                        binding.emptyLayout.visibility = View.GONE
                     }
 
                 }

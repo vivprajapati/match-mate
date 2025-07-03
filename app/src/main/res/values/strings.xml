@@ -4,4 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="decline">Decline</string>
     <string name="accept">Accept</string>
+    <string name="matches">Matches</string>
+    <string name="retry">Retry</string>
+    <string name="no_matches_found">No matches found</string>
 </resources>

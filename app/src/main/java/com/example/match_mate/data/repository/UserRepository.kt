@@ -18,7 +18,6 @@ class UserRepository {
     private val apiService = RetrofitInstance.apiService
     private val userDao = DatabaseManager.getDatabase().userDao()
 
-
     companion object {
         private val educationList = listOf(
             "B.Tech", "M.Tech", "MBA", "MCA", "B.Sc", "B.Com", "PhD"
@@ -28,7 +27,7 @@ class UserRepository {
         )
     }
 
-    suspend fun getAllUsers(): ApiResult<List<User>>  {
+    suspend fun getAllUsers(): ApiResult<List<User>> {
         return ApiResult.Success(userDao.getAllUsers())
     }
 
@@ -39,7 +38,6 @@ class UserRepository {
     suspend fun getDeclinedUsers(): ApiResult<List<User>> {
         return ApiResult.Success(userDao.getDeclinedUsers())
     }
-
 
     suspend fun updateUserStatus(user: User, status: String): ApiResult<User> {
         if (status == "accepted") {
@@ -100,7 +98,7 @@ class UserRepository {
 
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    val rawResponse = response.body().toString()  // Convert the body to a string for debugging
+                    val rawResponse = response.body().toString()
                     Log.d("UsersRepository", "Raw response body: $rawResponse")
                     if (responseBody != null) {
                         Log.e("UsersRepository", "fetchLoggedInUser: $response")
@@ -119,7 +117,6 @@ class UserRepository {
         }
     }
 
-
     private fun handleApiResponse(jsonString: String, status: String): List<User> {
         val jsonObject = JSONObject(jsonString)
         val results = jsonObject.getJSONArray("results")
@@ -135,8 +132,6 @@ class UserRepository {
 
     private fun parseUserFromResponse(responseBody: String, status: String): User {
         val jsonObject = JSONObject(responseBody)
-
-        // Extract nested fields properly
         val nameObject = jsonObject.getJSONObject("name")
         val locationObject = jsonObject.getJSONObject("location")
         val loginObject = jsonObject.getJSONObject("login")
@@ -179,10 +174,10 @@ class UserRepository {
         return withContext(Dispatchers.IO) {
             try {
                 userDao.markUserAsAccepted(uuid)
-                ApiResult.Success(Unit) // Successful operation, return success
+                ApiResult.Success(Unit)
             } catch (e: Exception) {
                 Log.e("UserRepository", "Error accepting user: ${e.message}")
-                ApiResult.Error(e.hashCode(), "Failed to accept user: ${e.message}") // Error case
+                ApiResult.Error(e.hashCode(), "Failed to accept user: ${e.message}")
             }
         }
     }
@@ -191,10 +186,10 @@ class UserRepository {
         return withContext(Dispatchers.IO) {
             try {
                 userDao.markUserAsDeclined(uuid)
-                ApiResult.Success(Unit) // Successful operation, return success
+                ApiResult.Success(Unit)
             } catch (e: Exception) {
                 Log.e("UserRepository", "Error declining user: ${e.message}")
-                ApiResult.Error(e.hashCode(), "Failed to decline user: ${e.message}") // Error case
+                ApiResult.Error(e.hashCode(), "Failed to decline user: ${e.message}")
             }
         }
     }

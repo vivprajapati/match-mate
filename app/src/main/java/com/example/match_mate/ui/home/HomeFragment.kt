@@ -46,6 +46,12 @@ class HomeFragment : Fragment() {
                         binding.errorLayout.visibility = View.GONE
                         binding.matchRecyclerView.visibility = View.VISIBLE
                         userAdapter.updateData(result.data)
+                        if (userAdapter.getUsers().isEmpty()){
+                            binding.emptyLayout.visibility = View.VISIBLE
+                            binding.matchRecyclerView.visibility = View.GONE
+                        } else {
+                            binding.emptyLayout.visibility = View.GONE
+                        }
                     } else {
                         userAdapter.addUsers(result.data)
                     }
@@ -59,6 +65,7 @@ class HomeFragment : Fragment() {
                         binding.errorLayout.visibility = View.VISIBLE
                         binding.matchRecyclerView.visibility = View.GONE
                         binding.errorMessageTextView.text = errorMessage
+                        binding.emptyLayout.visibility = View.GONE
                     } else {
                         Snackbar.make(binding.root, errorMessage.toString(), Snackbar.LENGTH_SHORT)
                             .setAction("Retry") {
@@ -73,6 +80,7 @@ class HomeFragment : Fragment() {
                         binding.loadingProgressBar.visibility = View.VISIBLE
                         binding.errorLayout.visibility = View.GONE
                         binding.matchRecyclerView.visibility = View.GONE
+                        binding.emptyLayout.visibility = View.GONE
                     }
                 }
             }
