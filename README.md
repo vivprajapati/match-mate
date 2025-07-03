@@ -7,6 +7,13 @@
 
 A modern Android dating application built with Kotlin that allows users to discover potential matches, accept or decline them, and manage their preferences. The app follows clean architecture principles and modern Android development practices.
 
+<div style="
+    display: flex;
+    align-items: center;
+    justify-content: center;">
+   <img src="Screenshot/app_ui.png">
+</div>
+
 ## 📱 Features
 
 - **User Discovery**: Browse through potential matches fetched from external API
