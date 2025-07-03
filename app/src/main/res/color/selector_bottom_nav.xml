@@ -1,0 +1,5 @@
+<!-- res/color/selector_bottom_nav.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#1C0D0D" android:state_checked="true" />
+    <item android:color="#666666" />
+</selector>
