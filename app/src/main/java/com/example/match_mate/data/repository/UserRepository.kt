@@ -28,19 +28,20 @@ class UserRepository {
         )
     }
 
-    fun getAllUsers(): LiveData<List<User>> {
-        return userDao.getAllUsers()
+    suspend fun getAllUsers(): ApiResult<List<User>>  {
+        return ApiResult.Success(userDao.getAllUsers())
     }
 
-    fun getAcceptedUsers(): LiveData<List<User>> {
-        return userDao.getAcceptedUsers()
+    suspend fun getAcceptedUsers(): ApiResult<List<User>> {
+        return ApiResult.Success(userDao.getAcceptedUsers())
     }
 
-    fun getDeclinedUsers(): LiveData<List<User>> {
-        return userDao.getDeclinedUsers()
+    suspend fun getDeclinedUsers(): ApiResult<List<User>> {
+        return ApiResult.Success(userDao.getDeclinedUsers())
     }
 
-    suspend fun updateUserStatus(user: User, status: String): ApiResult<User>  {
+
+    suspend fun updateUserStatus(user: User, status: String): ApiResult<User> {
         if (status == "accepted") {
             userDao.markUserAsAccepted(user.uuid)
             return ApiResult.Success(user)
@@ -75,8 +76,8 @@ class UserRepository {
                     val responseBody = response.body()
 
                     if (responseBody != null) {
-                        val userList = handleApiResponse(response.body().toString(),"pending")
-//                        userDao.insertUsers(userList)
+                        val userList = handleApiResponse(response.body().toString(), "pending")
+                        userDao.insertUsers(userList)
                         Log.e("UserRepository", "fetchUsers: ${userList.size}")
                         ApiResult.Success(userList)
                     } else {
@@ -92,7 +93,6 @@ class UserRepository {
         }
     }
 
-
     suspend fun fetchLoggedInUser(): ApiResult<User> {
         return withContext(Dispatchers.IO) {
             try {
@@ -104,7 +104,7 @@ class UserRepository {
                     Log.d("UsersRepository", "Raw response body: $rawResponse")
                     if (responseBody != null) {
                         Log.e("UsersRepository", "fetchLoggedInUser: $response")
-                        val user = handleApiResponse(response.body().toString(),"self")[0]
+                        val user = handleApiResponse(response.body().toString(), "self")[0]
                         userDao.insertUser(user)
                         ApiResult.Success(user)
                     } else {
@@ -127,13 +127,13 @@ class UserRepository {
 
         for (i in 0 until results.length()) {
             val userJson = results.getJSONObject(i)
-            val user = parseUserFromResponse(userJson.toString(),status)
+            val user = parseUserFromResponse(userJson.toString(), status)
             userList.add(user)
         }
         return userList
     }
 
-    private fun parseUserFromResponse(responseBody: String,status: String): User {
+    private fun parseUserFromResponse(responseBody: String, status: String): User {
         val jsonObject = JSONObject(responseBody)
 
         // Extract nested fields properly

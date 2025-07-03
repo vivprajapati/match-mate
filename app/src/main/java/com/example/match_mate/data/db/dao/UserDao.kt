@@ -25,13 +25,13 @@ interface UserDao {
     suspend fun updateUser(user: User)
 
     @Query("SELECT * FROM users")
-    fun getAllUsers(): LiveData<List<User>>
+    suspend fun getAllUsers(): List<User>
 
     @Query("SELECT * FROM users WHERE status = 'accepted'")
-    fun getAcceptedUsers(): LiveData<List<User>>
+    suspend fun getAcceptedUsers(): List<User>
 
     @Query("SELECT * FROM users WHERE status = 'declined'")
-    fun getDeclinedUsers(): LiveData<List<User>>
+    suspend fun getDeclinedUsers(): List<User>
 
     @Query("UPDATE users SET status = 'accepted' WHERE uuid = :uuid")
     suspend fun markUserAsAccepted(uuid: String)
